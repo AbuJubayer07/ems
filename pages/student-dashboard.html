@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Dashboard — View Result</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#041021;--accent:#00d1ff;--muted:#bfc9d9}
+  body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{width:100%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:20px;border-radius:12px}
+  h1{margin:0;color:var(--accent)}
+  .row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  input{padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:#fff}
+  button{padding:10px 14px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent),#ffd166);color:#001;cursor:pointer}
+  table{width:100%;margin-top:16px;border-collapse:collapse}
+  th{color:var(--accent);text-align:left;padding:8px}
+  td{padding:8px;color:var(--muted)}
+  .pass{color:#7af27a;font-weight:700} .fail{color:#ff7a7a;font-weight:700}
+  #bgCanvas{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.6;}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="card">
+  <h1>Student Result Viewer</h1>
+  <p style="color:var(--muted);margin:6px 0 12px">Enter your details to view your results.</p>
+
+  <div class="row">
+    <input id="s_name" placeholder="Student Name">
+    <input id="s_roll" type="number" placeholder="Roll">
+    <input id="s_class" type="number" placeholder="Class">
+    <input id="s_section" placeholder="Section (A)">
+    <button id="viewBtn">View Results</button>
+  </div>
+
+  <div id="resultArea" style="display:none">
+    <h3 style="margin-top:16px">Your Results</h3>
+    <table id="rtable"><thead><tr><th>Subject</th><th>Marks</th><th>Status</th></tr></thead><tbody></tbody></table>
+    <div style="margin-top:12px">
+      <button id="backBtn">Back</button>
+      <button id="homeBtn">Home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY='vp_school_results_v1';
+let results = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+const viewBtn=document.getElementById('viewBtn'), s_name=document.getElementById('s_name'), s_roll=document.getElementById('s_roll'), s_class=document.getElementById('s_class'), s_section=document.getElementById('s_section');
+const resultArea=document.getElementById('resultArea'), rtable=document.querySelector('#rtable tbody'), backBtn=document.getElementById('backBtn'), homeBtn=document.getElementById('homeBtn');
+
+viewBtn.addEventListener('click',()=>{
+  const name=s_name.value.trim(), roll= parseInt(s_roll.value), cls = parseInt(s_class.value), section=(s_section.value||'').trim().toUpperCase();
+  if(!name||!roll||!cls||!section){ alert('সব ফিল্ড পূরণ করুন'); return; }
+  if(cls<1||cls>12){ alert('Class 1-12'); return; }
+  if(!['A','B','C','D'].includes(section)){ alert('Section A-D'); return;}
+  const found = results.filter(r=> r.name===name && r.roll===roll && r.cls===cls && r.section===section);
+  if(found.length===0){ alert('কোনো ফলাফল পাওয়া যায়নি'); return; }
+  rtable.innerHTML='';
+  found.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.subject}</td><td>${r.marks}</td><td class="${r.status.toLowerCase()}">${r.status}</td>`;
+    rtable.appendChild(tr);
+  });
+  resultArea.style.display='block';
+});
+
+backBtn.addEventListener('click',()=>{ resultArea.style.display='none'; s_name.value=''; s_roll.value=''; s_class.value=''; s_section.value=''; });
+homeBtn.addEventListener('click', ()=> location.href='./index.html');
+
+/* nebula */
+const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');let W=c.width=innerWidth,H=c.height=innerHeight;addEventListener('resize',()=>{W=c.width=innerWidth;H=c.height=innerHeight});
+const dots=Array.from({length:120},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.2,dx:(Math.random()-0.5)*0.25,dy:(Math.random()-0.5)*0.25,h:Math.random()*360}));
+function anim(){ctx.clearRect(0,0,W,H);const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#051021');g.addColorStop(1,'#071822');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+dots.forEach(s=>{ctx.beginPath();ctx.fillStyle=`hsla(${s.h},60%,70%,0.06)`;ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill();s.x+=s.dx;s.y+=s.dy;if(s.x<0)s.x=W;if(s.x>W)s.x=0;if(s.y<0)s.y=H;if(s.y>H)s.y=0});requestAnimationFrame(anim)}anim();
+</script>
+</body>
+</html>

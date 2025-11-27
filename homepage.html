@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ভালুকা পাইলট উচ্চ বিদ্যালয়</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+html,body{height:100%;overflow-x:hidden;scroll-behavior:smooth;}
+a{text-decoration:none;color:inherit;}
+
+/* BACKGROUND */
+body{
+  background:#0f2027;
+  overflow-x:hidden;
+  position:relative;
+  color:#fff;
+}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
+
+/* SCROLL PROGRESS */
+#progressBar{position:fixed;top:0;left:0;width:0%;height:5px;background:#00f0ff;z-index:9999;transition:width 0.2s;}
+
+/* CONTAINER */
+.container{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:60px 20px;text-align:center;}
+
+/* HEADER */
+h1{
+  font-size:60px;margin-bottom:15px;
+  background:linear-gradient(90deg,#ffd700,#ff6b6b,#00f0ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 25px #ffd700,0 0 50px #00f0ff;
+  animation:glowText 3s ease-in-out infinite alternate;
+  position:relative; overflow:hidden;
+}
+h1::after{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+  transform:skewX(-20deg);
+  animation:lightStreak 2.5s infinite;
+}
+@keyframes lightStreak{0%{left:-100%;}100%{left:100%;}}
+@keyframes glowText{0%{text-shadow:0 0 10px #ffd700,0 0 20px #00f0ff;}100%{text-shadow:0 0 35px #ff6b6b,0 0 70px #00f0ff;}}
+p.sub-info{color:#ccc;margin-bottom:60px;font-size:18px;}
+
+/* PANELS */
+.panels{display:flex;gap:50px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;}
+.panel{
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border-radius:25px;
+  padding:50px 40px;
+  width:300px;
+  cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  position:relative; overflow:hidden;
+}
+.panel::before{
+  content:''; position:absolute; top:-50%;left:-50%; width:200%;height:200%;
+  background: rgba(255,255,255,0.05); transform: rotate(45deg); transition: all 0.5s ease;
+}
+.panel:hover::before{top:-30%;left:-30%; width:250%;height:250%;}
+.panel:hover{
+  transform: perspective(1200px) rotateX(5deg) rotateY(5deg) scale(1.08);
+  box-shadow:0 30px 60px rgba(0,0,0,0.8);
+}
+.panel h2{margin:0;font-size:28px;color:#00f0ff;text-shadow:0 0 15px #00f0ff;}
+
+/* PANEL HOVER PARTICLES + TRAILS */
+.hover-particle{
+  position:absolute;
+  width:4px; height:4px;
+  border-radius:50%;
+  background:#00f0ff;
+  pointer-events:none;
+  box-shadow:0 0 8px #00f0ff,0 0 15px #00f0ff;
+  animation:particleMove 0.8s ease-out forwards;
+}
+@keyframes particleMove{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--x), var(--y)) scale(0);opacity:0;}}
+
+/* INFO CARD */
+.info{
+  display:flex; flex-direction:column; gap:15px; max-width:700px;
+  background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+  padding:30px; border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.5);
+  opacity:0; transform:translateY(60px); transition: all 1s ease;
+}
+.info.visible{opacity:1; transform:translateY(0);}
+.info p{color:#eee; font-size:18px;}
+
+/* FOOTER */
+footer{margin-top:50px;text-align:center;color:#ccc;}
+
+/* RESPONSIVE */
+@media (max-width:768px){.panels{flex-direction:column;gap:30px;}.panel{width:90%;}}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div id="progressBar"></div>
+
+<div class="container">
+  <h1>ভালুকা পাইলট উচ্চ বিদ্যালয়</h1>
+  <p class="sub-info">প্রতিষ্ঠাতা: মোঃ আফতাব উদ্দিন চৌধুরী | অবস্থান: ঢাকা – ময়মনসিংহ মহাসড়ক, ভালুকা থানা, ময়মনসিংহ জেলা | EIIN: ১১১২৮০</p>
+
+  <div class="panels">
+  <a class="panel" href="./pages/teachers-dashboard.html">
+    <h2>Teacher Panel</h2>
+  </a>
+
+  <a class="panel" href="./pages/student-dashboard.html">
+    <h2>Student Panel</h2>
+  </a>
+</div>
+
+  <div class="info" id="schoolInfo">
+    <p>ভালুকা পাইলট উচ্চ বিদ্যালয়, প্রতিষ্ঠাতা: মোঃ আফতাব উদ্দিন চৌধুরী, অবস্থান: ঢাকা – ময়মনসিংহ মহাসড়ক, ভালুকা থানা, ময়মনসিংহ জেলা, EIIN: ১১১২৮০</p>
+  </div>
+
+  <footer>&copy; ২০২৫ ভালুকা পাইলট উচ্চ বিদ্যালয়</footer>
+</div>
+
+<script>
+// CANVAS NEBULA + SHOOTING STARS + COLOR SHIFT
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+window.addEventListener('resize', ()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
+
+// nebula particles
+const particles = [];
+for(let i=0;i<200;i++){
+  particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5,hue:Math.random()*360});
+}
+
+// shooting stars
+const shootingStars = [];
+function createShootingStar(){shootingStars.push({x:Math.random()*w,y:Math.random()*h/2,length:Math.random()*200+100,speed:Math.random()*15+5,opacity:1});}
+setInterval(createShootingStar,1000);
+
+let time=0;
+function animate(){
+  time+=0.005;
+  const r=Math.floor(15+20*Math.sin(time*1.5));
+  const g=Math.floor(32+40*Math.sin(time*1.2));
+  const b=Math.floor(39+40*Math.cos(time));
+  ctx.fillStyle=`rgba(${r},${g},${b},0.7)`;
+  ctx.fillRect(0,0,w,h);
+
+  for(let p of particles){
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    const hue=(p.hue+time*100)%360;
+    ctx.fillStyle=`hsla(${hue},80%,60%,0.3)`;
+    ctx.fill();
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x>w)p.x=0;if(p.x<0)p.x=w;
+    if(p.y>h)p.y=0;if(p.y<0)p.y=h;
+  }
+
+  for(let i=shootingStars.length-1;i>=0;i--){
+    let s=shootingStars[i];
+    ctx.strokeStyle='rgba(255,255,255,'+s.opacity+')';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(s.x,s.y);
+    ctx.lineTo(s.x-s.length,s.y+s.length*0.2);
+    ctx.stroke();
+    s.x+=s.speed;s.y+=s.speed*0.2;s.opacity-=0.02;
+    if(s.opacity<=0) shootingStars.splice(i,1);
+  }
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+// SCROLL INFO
+const info=document.getElementById('schoolInfo');
+window.addEventListener('scroll', ()=>{
+  const rect=info.getBoundingClientRect();
+  if(rect.top<window.innerHeight-100){ info.classList.add('visible'); }
+  const scrollTop=window.scrollY;
+  const docHeight=document.body.scrollHeight-window.innerHeight;
+  const scrollPercent=(scrollTop/docHeight)*100;
+  document.getElementById('progressBar').style.width=scrollPercent+'%';
+});
+
+// PANEL HOVER PARTICLES
+const panels=document.querySelectorAll('.panel');
+panels.forEach(panel=>{
+  panel.addEventListener('mousemove', e=>{
+    const rect=panel.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const px=(x-rect.width/2)/15;
+    const py=(y-rect.height/2)/15;
+    panel.style.transform=`perspective(1200px) rotateX(${-py}deg) rotateY(${px}deg) scale(1.08)`;
+    for(let i=0;i<4;i++){
+      const particle=document.createElement('div');
+      particle.classList.add('hover-particle');
+      const dx=(Math.random()-0.5)*150+'px';
+      const dy=(Math.random()-0.5)*150+'px';
+      particle.style.left=x+'px';
+      particle.style.top=y+'px';
+      particle.style.setProperty('--x',dx);
+      particle.style.setProperty('--y',dy);
+      panel.appendChild(particle);
+      setTimeout(()=>particle.remove(),900);
+    }
+  });
+  panel.addEventListener('mouseleave', ()=>{
+    panel.style.transform=`perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)`;
+  });
+});
+</script>
+</body>
+</html>
